@@ -1,0 +1,68 @@
+﻿<Page
+    x:Class="BitcoinDeveloperTools.View.SendCoinView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BitcoinDeveloperTools.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel x:Name="MainContainer" Background="White">
+        <StackPanel x:Name="Title_Header" Height="100" Orientation="Horizontal">
+            <StackPanel>
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="Bitcoin.Developer" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="75" TextAlignment="Center" FontWeight="ExtraBold" Grid.Column="1" Foreground="DeepSkyBlue"/>
+            </StackPanel>
+            <StackPanel Height="100" Margin="200,30,0,0">
+                <TextBlock Text="This is the TX # for the sent coins..." FontSize="15" Margin="0,0,0,0" Width="431"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                    <Button x:Name="NewTxCopyButton" Content="Copy" Margin="0,0,0,50" HorizontalAlignment="Center" Background="Turquoise" Click="NewTxCopyButton_Click"/>
+                    <TextBox HorizontalAlignment="Center" Margin="5,0,0,50" VerticalAlignment="Center" Width="495"  x:Name="TxCreated" FontSize="20" BorderThickness="2" BorderBrush="CadetBlue" Grid.Column="1" IsReadOnly="True" SelectionHighlightColor="Turquoise"/>
+                </StackPanel>
+
+            </StackPanel>
+            
+
+        </StackPanel>
+        <StackPanel x:Name="Nav_Bar" Orientation="Horizontal" Height="50">
+            <HyperlinkButton Content="Main" FontSize="30" Margin="0,0,0,0" Width="273" Click="Main_Click" Foreground="BlueViolet"/>
+            <HyperlinkButton Content="Find Transaction" FontSize="30" Margin="0,0,0,0" Width="273" Click="FindTransaction_Click" Foreground="BlueViolet"/>
+        </StackPanel>
+        <StackPanel x:Name="Page_Title" Height="130" HorizontalAlignment="Center" >
+            <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="SEND SECURE" TextWrapping="Wrap" VerticalAlignment="Top" Height="155" Width="1097" FontSize="100" TextAlignment="Center" FontWeight="SemiBold" Grid.Column="1" Foreground="DeepSkyBlue"/>
+        </StackPanel>
+        <StackPanel Height="50" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
+            <TextBox PlaceholderText="Who will recieve this BTC?" FontSize="15" Width="500" Margin="10,0,0,0" Text="" Name="SendAddressBox" TextChanged="SendAddressBox_TextChanged" VerticalAlignment="Center"/>
+        </StackPanel>
+        <StackPanel Height="50" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
+            <TextBox PlaceholderText="How much BTC are you sending?" FontSize="15" Width="500" Margin="10,0,0,0" Text="" Name="SendAmountBox" Visibility="Visible" TextChanged="SendAmountBox_TextChanged" VerticalAlignment="Center"/>
+        </StackPanel>
+        <StackPanel Height="50" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
+            <TextBox PlaceholderText="Enter a fee for mining [0.001 - 0.005]" FontSize="15" Width="500" Margin="10,0,0,0" Text="" Name="MinerAmountBox" Visibility="Visible" TextChanged="MinerAmountBox_TextChanged" VerticalAlignment="Center"/>
+        </StackPanel>
+        <StackPanel Height="50" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
+            <TextBox PlaceholderText="Enter the Transaction # proving spendable coins" FontSize="15" Width="500" Margin="10,0,0,0" Text="" Name="OwnerTxBox" Visibility="Visible" TextChanged="OwnerTxBox_TextChanged" VerticalAlignment="Center"/>
+        </StackPanel>
+        <StackPanel Height="50" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
+            <TextBox PlaceholderText="Enter your PrivateKey to use spendable coins" FontSize="15" Width="500" Margin="10,0,0,0" Text="" Name="PrivateKeyBox" TextChanged="PrivateKeyBox_TextChanged" Visibility="Visible" VerticalAlignment="Center"/>
+        </StackPanel>
+        <StackPanel x:Name="Send_Recieve" Orientation="Horizontal" HorizontalAlignment="Center" Height="150">
+            <Button x:Name="SendButton" Content="- Send Coins" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" Height="125" Width="350" FontSize="40" VerticalContentAlignment="Center" Background="SteelBlue" Grid.Column="1" FontWeight="SemiBold" Foreground="DarkTurquoise" Visibility="Visible" Click="SendButton_Click"/>
+        </StackPanel>
+        <StackPanel x:Name="Exception_Viewer" Height="50">
+            <TextBlock HorizontalAlignment="Center" Margin="0,10,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="20" FontStretch="Expanded" x:Name="ErrorText" Grid.Column="1" Height="30" Width="1000" TextAlignment="Center"/>
+        </StackPanel>
+        <StackPanel x:Name="Color_Rectangles" Orientation="Horizontal" Height="20">
+            <Rectangle Fill="DarkCyan" Width="100"/>
+            <Rectangle Fill="DarkBlue"  Width="200"/>
+            <Rectangle Fill="CadetBlue" Width="50"/>
+            <Rectangle Fill="DarkSlateBlue" Width="125"/>
+            <Rectangle Fill="DodgerBlue" Width="250"/>
+            <Rectangle Fill="MediumBlue" Width="175"/>
+            <Rectangle Fill="SkyBlue" Width="100"/>
+            <Rectangle Fill="SteelBlue" Width="200"/>
+            <Rectangle Fill="CornflowerBlue" Width="50"/>
+            <Rectangle Fill="SlateBlue" Width="125"/>
+            <Rectangle Fill="DeepSkyBlue" Width="250"/>
+        </StackPanel>
+    </StackPanel>
+</Page>
