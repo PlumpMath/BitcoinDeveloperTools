@@ -10,38 +10,44 @@
     <StackPanel Background="White">
         <StackPanel Height="100" Orientation="Horizontal">
             <TextBlock HorizontalAlignment="Left" Margin="0,0,0,0" Text="Bitcoin.Developer" TextWrapping="Wrap" VerticalAlignment="Top" Height="102" Width="673" FontSize="75" TextAlignment="Center" FontWeight="ExtraBold" Grid.Column="1" Foreground="DeepSkyBlue"/>
+            <StackPanel Margin="350,5,0,0" Height="100">
+                <TextBlock x:Name="PasteErrorText" Text="" FontSize="15" Margin="0,5,0,0" Width="431" TextAlignment="Center" Foreground="Red"/>
+                <Button x:Name="PasteTxButton" Content="Paste" Margin="0,0,0,0" HorizontalAlignment="Center" Background="Turquoise" Click="PasteTxButton_Click" Height="67" Width="142" FontSize="25"/>
+            </StackPanel>
+
         </StackPanel>
         <StackPanel x:Name="Nav_Bar" Orientation="Horizontal" Height="50">
             <HyperlinkButton Content="Main" FontSize="30" Margin="0,0,0,0" Width="273" Click="Main_Click" Foreground="BlueViolet" VerticalAlignment="Bottom"/>
+            <HyperlinkButton Content="Send Coins" FontSize="30" Margin="0,0,0,0" Width="273" Click="SendCoins_Click" Foreground="BlueViolet" VerticalAlignment="Stretch"/>
         </StackPanel>
         <StackPanel Height="140" HorizontalAlignment="Center">
             <TextBlock HorizontalAlignment="Center" Margin="0,18,0,0" Text="TX LOOKUP" TextWrapping="Wrap" VerticalAlignment="Top" Height="155" Width="1097" FontSize="100" TextAlignment="Center" FontWeight="SemiBold" Foreground="DeepSkyBlue"/>
         </StackPanel>
-        <StackPanel Height="80" Orientation="Horizontal">
-            <TextBox x:Name="TxInputBox" HorizontalAlignment="Center" Margin="320,10,0,0" Text="" VerticalAlignment="Center" Height="39" Width="800" FontSize="20" FontWeight="SemiBold" PlaceholderText="Search BTC TestNet Transaction # (Click MainNet 1st for BTC Main Transaction #)" IsReadOnly="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionHighlightColor="Green" />
-            <Button x:Name="FindTxBtn" Content="Find" HorizontalAlignment="Center" Margin="30,24,0,0" VerticalAlignment="Top" Height="37" Width="107" FontSize="10" VerticalContentAlignment="Center" Background="SteelBlue" Click="FindTxBtn_ClickAsync"/>
-            <ToggleButton x:Name="MainTxBtn" Content="MainNet" HorizontalAlignment="Center" Margin="30,24,0,0" VerticalAlignment="Top" Height="37" Width="107" FontSize="10" VerticalContentAlignment="Center" Background="SteelBlue"/>
+        <StackPanel Height="80" Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBox x:Name="TxInputBox" HorizontalAlignment="Center" Margin="160,0,0,0" Text="" VerticalAlignment="Center" Height="39" Width="800" FontSize="20" FontWeight="SemiBold" PlaceholderText="Search BTC TestNet Transaction # (Click MainNet 1st for BTC Main Transaction #)" IsReadOnly="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionHighlightColor="Green"/>
+            <Button x:Name="FindTxBtn" Content="Find" HorizontalAlignment="Center" Margin="10,0,0,0" VerticalAlignment="Center" Height="37" Width="107" FontSize="10" VerticalContentAlignment="Center" Background="SteelBlue" Click="FindTxBtn_ClickAsync"/>
+            <ToggleButton x:Name="MainTxBtn" Content="MainNet" HorizontalAlignment="Center" Margin="10,0,0,0" VerticalAlignment="Center" Height="37" Width="107" FontSize="10" VerticalContentAlignment="Center" Background="SteelBlue"/>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Height="100" Margin="0,0,0,0" HorizontalAlignment="Center">
-            <StackPanel HorizontalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Height="75" Margin="0,0,0,5" HorizontalAlignment="Center" Width="875">
+            <StackPanel Margin="0,0,10,0" BorderBrush="Blue" BorderThickness="1">
                 <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="Total TxIn"  TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FontSize="30" Foreground="SteelBlue"/>
-                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0"  Text="{Binding SpentAmount, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" Height="48" Width="150" x:Name="SentAmountTxt" TextAlignment="Center" FontSize="20" Foreground="SteelBlue"/>
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0"  Text="{Binding SpentAmount, Mode=OneWay}"  TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="150" x:Name="SentAmountTxt" TextAlignment="Center" FontSize="20" Foreground="SteelBlue"/>
             </StackPanel>
-            <StackPanel HorizontalAlignment="Center">
+            <StackPanel Margin="0,0,10,0" BorderBrush="Blue" BorderThickness="1">
                 <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="Total Fees" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FontSize="30" Foreground="SteelBlue"/>
-                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="{Binding Fee, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Top" Height="48" Width="150" x:Name="MinedAmountTxt" TextAlignment="Center" FontSize="20" Foreground="SteelBlue" />    
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="{Binding Fee, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="150" x:Name="MinedAmountTxt" TextAlignment="Center" FontSize="20" Foreground="SteelBlue" />
             </StackPanel>
-            <StackPanel HorizontalAlignment="Center">
+            <StackPanel Margin="0,0,10,0" BorderBrush="Blue" BorderThickness="1">
                 <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="Total TxOut" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FontSize="30" Foreground="SteelBlue"/>
-                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="{Binding RecievedAmount, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Top" Height="48" Width="150" x:Name="RecievedAmountTxt" TextAlignment="Center" FontSize="20" Foreground="SteelBlue"/>    
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="{Binding RecievedAmount, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="150" x:Name="RecievedAmountTxt" TextAlignment="Center" FontSize="20" Foreground="SteelBlue"/>
             </StackPanel>
-            <StackPanel HorizontalAlignment="Center">
-                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="Prev Outpoint Count" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FontSize="30" Foreground="SteelBlue"/>
-                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="{Binding OutpointCount, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Top" Height="48" Width="150" x:Name="OutpointCountTxt" TextAlignment="Center" FontSize="20" Foreground="SteelBlue"/>
+            <StackPanel Margin="0,0,10,0" BorderBrush="Blue" BorderThickness="1">
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="# Outpoints" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FontSize="30" Foreground="SteelBlue"/>
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="{Binding OutpointCount, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="150" x:Name="OutpointCountTxt" TextAlignment="Center" FontSize="20" Foreground="SteelBlue"/>
             </StackPanel>
-            <StackPanel HorizontalAlignment="Center">
-                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="Block Confirmations" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FontSize="30" Foreground="SteelBlue"/>
-                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="{Binding Block, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Top" Height="48" Width="150" x:Name="BlockCountTxt" TextAlignment="Center" FontSize="20" Foreground="SteelBlue"/>
+            <StackPanel Margin="0,0,10,0" BorderBrush="Blue" BorderThickness="1">
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="Confirmations" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Center" FontSize="30" Foreground="SteelBlue"/>
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" Text="{Binding Block, Mode=OneWay}" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="150" x:Name="BlockCountTxt" TextAlignment="Center" FontSize="20" Foreground="SteelBlue"/>
             </StackPanel>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Height="20">

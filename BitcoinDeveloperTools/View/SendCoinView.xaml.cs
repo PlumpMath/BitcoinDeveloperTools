@@ -45,129 +45,137 @@ namespace BitcoinDeveloperTools.View
             ////Key privateKey = new Key();
             ////var bitcoinPrivateKey = privateKey.GetWif(network);
             //#endregion
-            #region IMPORT PRIVKEY
-            var bitcoinPrivateKey = new BitcoinSecret(PrivateKeyBox.Text);
-            var network = bitcoinPrivateKey.Network;
-            var address = bitcoinPrivateKey.GetAddress();
-            #endregion
-
-            //Create Client and Query Tx
-            var client = new QBitNinjaClient(network);
-            var transactionId = uint256.Parse(OwnerTxBox.Text);
-            var transactionResponse = client.GetTransaction(transactionId).Result;
-
-
-            // find most suitable transaction
-            var historyTransaction = client.GetBalance(bitcoinPrivateKey.ScriptPubKey, true).Result;
-
-            // create transaction
-            primaryVM.Transaction = new Transaction();
-            primaryVM.CoinList = new List<ICoin>();
-
-            // add inputs to tx
-            decimal currentBalanceDecimal = 0;
-            foreach (var tx in historyTransaction.Operations)
+            ErrorText.Text = string.Empty;
+            try
             {
-                GetTransactionResponse currentTx = client.GetTransaction(new uint256(OwnerTxBox.Text)).Result;
+                #region IMPORT PRIVKEY
+                var bitcoinPrivateKey = new BitcoinSecret(PrivateKeyBox.Text);
+                var network = bitcoinPrivateKey.Network;
+                var address = bitcoinPrivateKey.GetAddress();
+                #endregion
 
-                foreach (var coin in currentTx.ReceivedCoins)
-                    if (((Money)coin.Amount).Satoshi > 0
-                        && coin.CanGetScriptCode
-                        && coin.GetScriptCode() == bitcoinPrivateKey.ScriptPubKey
-                        )
-                    {
-                        currentBalanceDecimal += ((NBitcoin.Coin)coin).Amount.ToDecimal(MoneyUnit.BTC);
-                        primaryVM.CoinList.Add(coin);
-                        primaryVM.Transaction.Inputs.Add(new TxIn(coin.Outpoint, bitcoinPrivateKey.ScriptPubKey));
-                    }
-            }
+                //Create Client and Query Tx
+                var client = new QBitNinjaClient(network);
+                var transactionId = uint256.Parse(OwnerTxBox.Text);
+                var transactionResponse = client.GetTransaction(transactionId).Result;
 
 
-            // calculate what amount of bitcoin needed to be send
-            primaryVM.CurrentBalance = new Money(currentBalanceDecimal, MoneyUnit.BTC);
-            primaryVM.MinerFee = new Money(Decimal.Parse(MinerAmountBox.Text), MoneyUnit.BTC);
-            primaryVM.RecieverAmount = new Money(Decimal.Parse(SendAmountBox.Text), MoneyUnit.BTC);
-            primaryVM.ChangeBackAmount = primaryVM.CurrentBalance - primaryVM.RecieverAmount - primaryVM.MinerFee;
+                // find most suitable transaction
+                var historyTransaction = client.GetBalance(bitcoinPrivateKey.ScriptPubKey, true).Result;
 
-            //Verify Recievers Address
-            var recieverAddress = new BitcoinPubKeyAddress(SendAddressBox.Text);
+                // create transaction
+                primaryVM.Transaction = new Transaction();
+                primaryVM.CoinList = new List<ICoin>();
 
-            //Package Recievers Transaction Details
-            TxOut recieverTxOut = new TxOut()
-            {
-                Value = primaryVM.RecieverAmount,
-                ScriptPubKey = recieverAddress.ScriptPubKey
-            };
-            primaryVM.Transaction.Outputs.Add(recieverTxOut);
-
-            //Package ChangeBack Transaction Details
-            if (primaryVM.ChangeBackAmount > 0)
-            {
-                TxOut changeBackTxOut = new TxOut()
+                // add inputs to tx
+                decimal currentBalanceDecimal = 0;
+                foreach (var tx in historyTransaction.Operations)
                 {
-                    Value = primaryVM.ChangeBackAmount,
-                    ScriptPubKey = bitcoinPrivateKey.ScriptPubKey
+                    GetTransactionResponse currentTx = client.GetTransaction(new uint256(OwnerTxBox.Text)).Result;
+
+                    foreach (var coin in currentTx.ReceivedCoins)
+                        if (((Money)coin.Amount).Satoshi > 0
+                            && coin.CanGetScriptCode
+                            && coin.GetScriptCode() == bitcoinPrivateKey.ScriptPubKey
+                            )
+                        {
+                            currentBalanceDecimal += ((NBitcoin.Coin)coin).Amount.ToDecimal(MoneyUnit.BTC);
+                            primaryVM.CoinList.Add(coin);
+                            primaryVM.Transaction.Inputs.Add(new TxIn(coin.Outpoint, bitcoinPrivateKey.ScriptPubKey));
+                        }
+                }
+
+
+                // calculate what amount of bitcoin needed to be send
+                primaryVM.CurrentBalance = new Money(currentBalanceDecimal, MoneyUnit.BTC);
+                primaryVM.MinerFee = new Money(Decimal.Parse(MinerAmountBox.Text), MoneyUnit.BTC);
+                primaryVM.RecieverAmount = new Money(Decimal.Parse(SendAmountBox.Text), MoneyUnit.BTC);
+                primaryVM.ChangeBackAmount = primaryVM.CurrentBalance - primaryVM.RecieverAmount - primaryVM.MinerFee;
+
+                //Verify Recievers Address
+                var recieverAddress = new BitcoinPubKeyAddress(SendAddressBox.Text);
+
+                //Package Recievers Transaction Details
+                TxOut recieverTxOut = new TxOut()
+                {
+                    Value = primaryVM.RecieverAmount,
+                    ScriptPubKey = recieverAddress.ScriptPubKey
                 };
-                primaryVM.Transaction.Outputs.Add(changeBackTxOut);
-            }
-            else
-            {
+                primaryVM.Transaction.Outputs.Add(recieverTxOut);
 
-            }
-            ////Add message to coin
-            //var message = SignTxBox.Text;
-            //var bytes = Encoding.UTF8.GetBytes(message);
-            //TxOut signedMessage = new TxOut()
-            //{
-            //    Value = Money.Zero,
-            //    ScriptPubKey = TxNullDataTemplate.Instance.GenerateScriptPubKey(bytes)
-            //};
-            //transaction.Outputs.Add(signedMessage);
+                //Package ChangeBack Transaction Details
+                if (primaryVM.ChangeBackAmount > 0)
+                {
+                    TxOut changeBackTxOut = new TxOut()
+                    {
+                        Value = primaryVM.ChangeBackAmount,
+                        ScriptPubKey = bitcoinPrivateKey.ScriptPubKey
+                    };
+                    primaryVM.Transaction.Outputs.Add(changeBackTxOut);
+                }
+                else
+                {
 
-            //var keys = new List<ExtKey>();
-            //keys.Add(masterKey.ExtKey.Derive((uint)1)); 
-            //Add Secret Keys to list
-            primaryVM.SecretKeyList = new List<ISecret>
+                }
+                ////Add message to coin
+                //var message = SignTxBox.Text;
+                //var bytes = Encoding.UTF8.GetBytes(message);
+                //TxOut signedMessage = new TxOut()
+                //{
+                //    Value = Money.Zero,
+                //    ScriptPubKey = TxNullDataTemplate.Instance.GenerateScriptPubKey(bytes)
+                //};
+                //transaction.Outputs.Add(signedMessage);
+
+                //var keys = new List<ExtKey>();
+                //keys.Add(masterKey.ExtKey.Derive((uint)1)); 
+                //Add Secret Keys to list
+                primaryVM.SecretKeyList = new List<ISecret>
             {
                 bitcoinPrivateKey
             };
 
-            //Sign Transaction
-            primaryVM.Transaction.Sign(primaryVM.SecretKeyList.ToArray(), primaryVM.CoinList.ToArray());
+                //Sign Transaction
+                primaryVM.Transaction.Sign(primaryVM.SecretKeyList.ToArray(), primaryVM.CoinList.ToArray());
 
-            //Verify Transaction Build Success
-            var builder = new TransactionBuilder();
-            NBitcoin.Policy.TransactionPolicyError[] error = null;
-            var checker = (builder.Verify(primaryVM.Transaction, out error));
-            if (checker == false)
-            {
-                ErrorText.Text = "Transaction Succecfully Completed Awaiting Confirmations...";
+                //Verify Transaction Build Success
+                var builder = new TransactionBuilder();
+                NBitcoin.Policy.TransactionPolicyError[] error = null;
+                var checker = (builder.Verify(primaryVM.Transaction, out error));
+                if (checker == false)
+                {
+                    ErrorText.Foreground = (SolidColorBrush)Resources["GreenColor"];
+                    ErrorText.Text = "Transaction Succecfully Completed Awaiting Confirmations...";
+                }
+                else
+                {
+                    ErrorText.Text = "Error Building Transaction, Please Try Again";
+                }
+
+
+                // Broadcast your transaction to all miners
+                BroadcastResponse broadcastResponse = client.Broadcast(primaryVM.Transaction).Result;
+                if (!broadcastResponse.Success)
+                {
+                    var errorcode = new Exception(broadcastResponse.Error.Reason);
+                    ErrorText.Text = errorcode.ToString();
+                }
+                historyTransaction = client.GetBalance(bitcoinPrivateKey.ScriptPubKey, true).Result;
+                uint256[] txHistoryArray = new uint256[25];
+                var count = 0;
+                foreach (var tx in historyTransaction.Operations)
+                {
+
+                    txHistoryArray[count] = tx.TransactionId;
+                    count += 1;
+                }
+
+                TxCreated.Text = txHistoryArray[0].ToString();
             }
-            else
+            catch (Exception ex)
             {
-                ErrorText.Text = "Error Building Transaction, Please Try Again";
+                ErrorText.Text = "Nothing Sent, Make sure you are filling out form completely and accurately"; 
             }
-            
-
-            // Broadcast your transaction to all miners
-            BroadcastResponse broadcastResponse = client.Broadcast(primaryVM.Transaction).Result;
-            if (!broadcastResponse.Success)
-            {
-                var errorcode = new Exception(broadcastResponse.Error.Reason);
-                ErrorText.Text = errorcode.ToString();
-            }
-            historyTransaction = client.GetBalance(bitcoinPrivateKey.ScriptPubKey, true).Result;
-            uint256[] txHistoryArray = new uint256[25];
-            var count = 0;
-            foreach (var tx in historyTransaction.Operations)
-            {
-
-                txHistoryArray[count] = tx.TransactionId;
-                count += 1;
-            }
-
-            TxCreated.Text = txHistoryArray[0].ToString();
-
         }
         private void FindTransaction_Click(object sender, RoutedEventArgs e)
         {

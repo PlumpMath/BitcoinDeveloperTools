@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -26,6 +27,7 @@ namespace BitcoinDeveloperTools.View
     public sealed partial class FindTransactionView : Page
     {
         private FindTransactionViewModel primaryVM = new FindTransactionViewModel();
+        DataPackage dataPackage = new DataPackage();
 
         public FindTransactionView()
         {
@@ -54,7 +56,7 @@ namespace BitcoinDeveloperTools.View
                     primaryVM.RecievedAmount = Money.Zero;
                     ListTxSummary.Items.Add("All Recieved Coins");
                 }
-                
+
                 //Sum: Total Recieved
                 foreach (var recievedCoin in primaryVM.RecievedCoins)
                 {
@@ -115,7 +117,7 @@ namespace BitcoinDeveloperTools.View
                         ListTxSummary.Items.Add($"Spent -{amount.ToDecimal(MoneyUnit.BTC)}BTC From: {address} : ScriptPubKey: {paymentScript}");
                     }
                 }
-                
+
 
                 // Previous Outpoints
                 var inputs = primaryVM.Transaction.Inputs;
@@ -123,7 +125,7 @@ namespace BitcoinDeveloperTools.View
                 var firstOutpoint = primaryVM.RecievedCoins.First().Outpoint;
                 var firstTransaction = primaryVM.Client.GetTransaction(firstOutpoint.Hash).Result.Transaction;
                 ListTxSummary.Items.Add("All Outpoints");
-                ListTxSummary.Items.Add($"#({primaryVM.OutpointCount + 1}) First Outpoint = {firstOutpoint.Hash} , {firstOutpoint.N} , {firstTransaction.IsCoinBase.ToString()}");
+                ListTxSummary.Items.Add($"#({primaryVM.OutpointCount + 1}) Current Outpoint = {firstOutpoint.Hash} , {firstOutpoint.N} , {firstTransaction.IsCoinBase.ToString()}");
 
                 var countOrder = primaryVM.OutpointCount;
                 foreach (TxIn input in inputs)
@@ -143,6 +145,31 @@ namespace BitcoinDeveloperTools.View
         private void Main_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(MainView));
+        }
+
+        private void PasteTxButton_Click(object sender, RoutedEventArgs Exception)
+        {
+            PasteErrorText.Text = string.Empty;
+            DataPackageView PasteData = Clipboard.GetContent();
+            try
+            {
+                if (PasteData.Contains(StandardDataFormats.Text))
+                {
+                    IAsyncOperation<string> ClipboardAsync = PasteData.GetTextAsync();
+                    string StringData = ClipboardAsync.GetResults();
+                    TxInputBox.Text = StringData;
+                }
+            }
+            catch (Exception)
+            {
+                PasteErrorText.Text = "Try Again...";
+
+            }
+        }
+
+        private void SendCoins_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(SendCoinView));
         }
     }
 }

@@ -46,7 +46,7 @@ namespace BitcoinDeveloperTools.View
             }
             catch (Exception e)
             {
-                BtcTestKey.Text = e.Message.ToString();
+                ErrorText.Text = "Could not 'Create' or 'Read' TestNet Address | Try Reinstalling...";
             }
         }
 
@@ -99,11 +99,15 @@ namespace BitcoinDeveloperTools.View
             {
                 // file/folder exists.
                 ReadBtcTestAddress_Async();
+                ErrorText.Foreground = (SolidColorBrush)Resources["GreenColor"];
+                ErrorText.Text = "Succesfully Read TestNet Address";
             }
             else
             {
                 // file/folder does not exist.
                 CreateBtcTestAddress_Async();
+                ErrorText.Foreground = (SolidColorBrush)Resources["GreenColor"];
+                ErrorText.Text = "Succesfully Created TestNet Address";
             }
         }
 
@@ -121,12 +125,20 @@ namespace BitcoinDeveloperTools.View
         private void FindTransaction_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(FindTransactionView));
+            
         }
 
         private void CopyTestButton_Click(object sender, RoutedEventArgs e)
         {
             dataPackage.RequestedOperation = DataPackageOperation.Copy;
             dataPackage.SetText(BtcTestAddress.Text);
+            Clipboard.SetContent(dataPackage);
+        }
+
+        private void CopyTestKeyButton_Click(object sender, RoutedEventArgs e)
+        {
+            dataPackage.RequestedOperation = DataPackageOperation.Copy;
+            dataPackage.SetText(BtcTestKey.Text);
             Clipboard.SetContent(dataPackage);
         }
     }
